@@ -197,10 +197,10 @@
       </div>
 
       <div class="row">
-        <button id="startCameraBtn" class="btn dark" type="button" onclick="startCamera()">
+        <button id="startCameraBtn" class="btn dark" type="button">
           📷 AKTIFKAN KAMERA
         </button>
-        <button id="stopCameraBtn" class="btn gray hidden" type="button" onclick="stopCamera()">
+        <button id="stopCameraBtn" class="btn gray hidden" type="button">
           ⏹ MATIKAN KAMERA
         </button>
       </div>
@@ -213,7 +213,7 @@
       <input id="customerInput" type="text" placeholder="Contoh: BE000001"
              autocomplete="off" autocapitalize="characters">
       <div style="height:10px"></div>
-      <button id="searchBtn" class="btn blue" type="button" onclick="searchCustomer()">
+      <button id="searchBtn" class="btn blue" type="button">
         🔍 CARI PELANGGAN
       </button>
     </section>
@@ -231,7 +231,7 @@
       </div>
 
       <div style="height:10px"></div>
-      <button id="checkinBtn" class="btn green" type="button" onclick="doCheckin()">
+      <button id="checkinBtn" class="btn green" type="button">
         ☑ CHECK-IN SEKARANG
       </button>
     </section>
@@ -569,7 +569,11 @@
     try {
       const response = await jsonp('search', { customerId: id });
 
-      if (!response || response.success === false) {
+      if (!response) {
+        throw new Error('Tidak ada respons dari Apps Script. Periksa URL Web App dan deployment /exec.');
+      }
+
+      if (response.success === false) {
         throw new Error(response && response.message ? response.message : 'Pelanggan tidak ditemukan.');
       }
 
@@ -616,7 +620,11 @@
     try {
       const response = await jsonp('checkin', { customerId });
 
-      if (!response || response.success === false) {
+      if (!response) {
+        throw new Error('Tidak ada respons dari Apps Script. Periksa URL Web App dan deployment /exec.');
+      }
+
+      if (response.success === false) {
         throw new Error(response && response.message ? response.message : 'Check-in ditolak.');
       }
 
@@ -674,10 +682,27 @@
     } catch (_) {}
   }
 
+  // Button handlers are registered here because all functions live
+  // inside this IIFE and therefore are intentionally not global.
+  $('startCameraBtn').addEventListener('click', () => startCamera());
+  $('stopCameraBtn').addEventListener('click', () => stopCamera());
+  $('searchBtn').addEventListener('click', () => searchCustomer());
+  $('checkinBtn').addEventListener('click', () => doCheckin());
+
   // Enter key in manual customer field.
   $('customerInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') searchCustomer();
   });
+
+  // Basic startup check: the page must have the required scanner library.
+  if (typeof Html5Qrcode === 'undefined') {
+    setCameraStatus('Library scanner gagal dimuat.');
+    showNotice(
+      $('cameraNotice'),
+      'error',
+      '❌ Library QR scanner tidak termuat. Pastikan koneksi internet tersedia lalu reload halaman.'
+    );
+  }
 
   // Release camera if browser navigates away.
   window.addEventListener('pagehide', () => {
