@@ -2,1341 +2,690 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#111827">
-  <title>Bromo Escapes - Kasir</title>
+  <title>Bromo Escapes — Kasir</title>
 
-  <!-- QR scanner -->
-  <script
-    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
-  ></script>
+  <!-- QR scanner library -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       background: #f3f4f6;
-      font-family: Arial, sans-serif;
       color: #111827;
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .header {
+    .top {
       background: #111827;
       color: white;
       text-align: center;
-      padding: 22px 15px 24px;
+      padding: 14px 16px 20px;
     }
-
-    .logo {
+    .brand {
       font-size: 25px;
       font-weight: 800;
       letter-spacing: 1px;
     }
-
     .sub {
-      font-size: 12px;
-      color: #cbd5e1;
-      margin-top: 5px;
+      font-size: 11px;
+      margin-top: 4px;
+      opacity: .85;
     }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 18px;
+    .wrap {
+      max-width: 560px;
+      margin: -1px auto 30px;
+      padding: 0 14px;
     }
-
     .card {
       background: white;
-      border-radius: 18px;
+      border-radius: 20px;
+      margin-top: 14px;
       padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.07);
+      box-shadow: 0 7px 25px rgba(0,0,0,.07);
     }
-
-    .title {
+    h2 {
       text-align: center;
-      font-size: 19px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      letter-spacing: .5px;
+      margin: 0 0 18px;
+      font-size: 18px;
+      letter-spacing: 1px;
     }
-
+    .camera-box {
+      overflow: hidden;
+      border-radius: 14px;
+      background: #111827;
+      min-height: 0;
+    }
     #reader {
       width: 100%;
-      overflow: hidden;
-      border-radius: 15px;
-      background: #111827;
+    }
+    #reader video {
+      width: 100% !important;
+      height: auto !important;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+    .camera-status {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin: 10px 0 16px;
       min-height: 20px;
     }
-
-    #reader video {
-      border-radius: 15px;
-    }
-
-    button {
+    .btn {
       width: 100%;
       border: 0;
       border-radius: 12px;
-      padding: 15px;
-      margin-top: 10px;
-      font-size: 16px;
+      min-height: 50px;
+      padding: 12px 16px;
+      font-size: 15px;
       font-weight: 700;
+      color: white;
       cursor: pointer;
     }
-
-    button:disabled {
+    .btn:disabled {
       opacity: .55;
       cursor: not-allowed;
     }
-
-    .start {
-      background: #111827;
-      color: white;
-    }
-
-    .stop {
-      background: #dc2626;
-      color: white;
-    }
-
-    .search {
-      background: #2563eb;
-      color: white;
-    }
-
-    .checkin {
-      background: #16a34a;
-      color: white;
-      font-size: 18px;
-    }
-
-    .reset {
-      background: #6b7280;
-      color: white;
-    }
-
+    .dark { background: #111827; }
+    .blue { background: #2563eb; }
+    .green { background: #16a34a; }
+    .gray { background: #6b7280; }
     input {
       width: 100%;
-      padding: 15px;
+      min-height: 50px;
       border: 1px solid #d1d5db;
       border-radius: 12px;
-      font-size: 17px;
-      text-transform: uppercase;
+      padding: 0 14px;
+      font-size: 16px;
       outline: none;
     }
-
-    input:focus {
-      border-color: #2563eb;
+    input:focus { border-color: #2563eb; }
+    .row { display: grid; gap: 10px; }
+    .camera-select {
+      display: none;
+      margin-top: 10px;
     }
-
-    .status {
+    .camera-select select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 0 10px;
+      background: white;
+      font-size: 14px;
+    }
+    .notice {
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-top: 14px;
       text-align: center;
-      padding: 12px;
-      color: #6b7280;
-      line-height: 1.5;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
     }
+    .notice.error { background: #fee2e2; color: #991b1b; }
+    .notice.success { background: #dcfce7; color: #166534; }
+    .notice.info { background: #e0f2fe; color: #075985; }
+    .notice.warn { background: #fef3c7; color: #92400e; }
+    .hidden { display: none !important; }
 
     .customer {
-      display: none;
-    }
-
-    .customer-id {
       text-align: center;
-      font-size: 30px;
+    }
+    .customer-id {
+      font-size: 29px;
       font-weight: 800;
       letter-spacing: 1px;
     }
-
     .customer-name {
-      text-align: center;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      margin: 8px 0 18px;
-    }
-
-    .customer-meta {
-      text-align: center;
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 14px;
-    }
-
-    .progress {
-      text-align: center;
-      background: #f3f4f6;
-      padding: 15px;
-      border-radius: 12px;
-    }
-
-    .progress-number {
-      font-size: 25px;
-      font-weight: 800;
       margin-top: 5px;
     }
-
-    .result {
-      display: none;
-      padding: 18px;
-      border-radius: 15px;
-      text-align: center;
-      margin-bottom: 15px;
-      font-weight: 700;
-      line-height: 1.5;
+    .progress {
+      margin-top: 18px;
+      background: #f3f4f6;
+      border-radius: 12px;
+      padding: 16px;
     }
-
-    .success {
-      display: block;
-      background: #dcfce7;
-      color: #166534;
+    .progress-label {
+      color: #374151;
+      font-size: 14px;
     }
-
-    .error {
-      display: block;
-      background: #fee2e2;
-      color: #991b1b;
+    .progress-value {
+      font-size: 25px;
+      font-weight: 800;
+      margin-top: 4px;
     }
-
-    .info {
-      display: block;
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .reward {
-      font-size: 28px;
-      font-weight: 900;
-      margin-top: 8px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .scan-lock {
-      pointer-events: none;
-      opacity: .65;
-    }
-
     .small {
       font-size: 12px;
-      font-weight: 400;
+      color: #6b7280;
+      margin-top: 8px;
+      line-height: 1.4;
     }
-
-    .footer {
-      text-align: center;
-      color: #9ca3af;
+    .debug {
       font-size: 11px;
-      padding: 4px 0 18px;
+      color: #6b7280;
+      word-break: break-word;
+      margin-top: 10px;
+      text-align: left;
     }
   </style>
 </head>
 
 <body>
-
-  <div class="header">
-    <div class="logo">
-      BROMO ESCAPES
-    </div>
-
-    <div class="sub">
-      CUSTOMER LOYALTY • KASIR
-    </div>
+  <div class="top">
+    <div class="brand">BROMO ESCAPES</div>
+    <div class="sub">CUSTOMER LOYALTY • KASIR</div>
   </div>
 
-  <div class="container">
+  <main class="wrap">
+    <section class="card">
+      <h2>📷 SCAN QR PELANGGAN</h2>
 
-    <!-- SCANNER -->
-    <div class="card">
+      <div id="cameraStatus" class="camera-status">Kamera belum diaktifkan.</div>
 
-      <div class="title">
-        📷 SCAN QR PELANGGAN
+      <div id="cameraBox" class="camera-box hidden">
+        <div id="reader"></div>
       </div>
 
-      <div id="reader"></div>
-
-      <div
-        id="cameraStatus"
-        class="status"
-      >
-        Kamera dimatikan.
+      <div id="cameraSelectBox" class="camera-select">
+        <select id="cameraSelect"></select>
       </div>
 
-      <button
-        class="start"
-        id="startBtn"
-        onclick="startScanner()"
-      >
-        📷 AKTIFKAN KAMERA
-      </button>
-
-      <button
-        class="stop hidden"
-        id="stopBtn"
-        onclick="stopScanner()"
-      >
-        ⛔ MATIKAN KAMERA
-      </button>
-
-    </div>
-
-
-    <!-- MANUAL SEARCH -->
-    <div class="card">
-
-      <div class="title">
-        ⌨️ NO PELANGGAN
+      <div class="row">
+        <button id="startCameraBtn" class="btn dark" type="button" onclick="startCamera()">
+          📷 AKTIFKAN KAMERA
+        </button>
+        <button id="stopCameraBtn" class="btn gray hidden" type="button" onclick="stopCamera()">
+          ⏹ MATIKAN KAMERA
+        </button>
       </div>
 
-      <input
-        id="customerInput"
-        placeholder="BE000001"
-        autocomplete="off"
-        autocapitalize="characters"
-      >
+      <div id="cameraNotice" class="notice hidden"></div>
+    </section>
 
-      <button
-        class="search"
-        id="searchBtn"
-        onclick="searchCustomer()"
-      >
+    <section class="card">
+      <h2>⌨️ NO PELANGGAN</h2>
+      <input id="customerInput" type="text" placeholder="Contoh: BE000001"
+             autocomplete="off" autocapitalize="characters">
+      <div style="height:10px"></div>
+      <button id="searchBtn" class="btn blue" type="button" onclick="searchCustomer()">
         🔍 CARI PELANGGAN
       </button>
+    </section>
 
-    </div>
+    <div id="resultNotice" class="notice hidden"></div>
 
-
-    <!-- RESULT -->
-    <div
-      id="result"
-      class="result"
-    ></div>
-
-
-    <!-- CUSTOMER -->
-    <div
-      id="customerCard"
-      class="card customer"
-    >
-
-      <div
-        class="customer-id"
-        id="customerId"
-      ></div>
-
-      <div
-        class="customer-name"
-        id="customerName"
-      ></div>
-
-      <div
-        class="customer-meta"
-        id="customerMeta"
-      ></div>
+    <section id="customerCard" class="card hidden customer">
+      <div id="customerId" class="customer-id">BE000001</div>
+      <div id="customerName" class="customer-name">Nama</div>
 
       <div class="progress">
-
-        Jumlah Kunjungan
-
-        <div
-          id="visits"
-          class="progress-number"
-        >
-          0 / 10
-        </div>
-
+        <div class="progress-label">Jumlah Kunjungan</div>
+        <div id="visitValue" class="progress-value">0 / 10</div>
+        <div id="cycleText" class="small"></div>
       </div>
 
-      <button
-        class="checkin"
-        id="checkinBtn"
-        onclick="checkIn()"
-      >
-        ✅ CHECK-IN SEKARANG
+      <div style="height:10px"></div>
+      <button id="checkinBtn" class="btn green" type="button" onclick="doCheckin()">
+        ☑ CHECK-IN SEKARANG
       </button>
+    </section>
 
-      <button
-        class="reset"
-        id="resetBtn"
-        onclick="resetCustomer()"
-      >
-        ↩️ BATAL / SCAN CUSTOMER LAIN
-      </button>
-
-    </div>
-
-
-    <div class="footer">
-      Bromo Escapes Customer Loyalty
-    </div>
-
-  </div>
-
+    <div id="debug" class="debug hidden"></div>
+  </main>
 
 <script>
-  /********************************************************
-   * CONFIG
-   ********************************************************/
+(() => {
+  'use strict';
 
-  const API_URL =
-    'https://script.google.com/macros/s/AKfycbwUrauP1WJQmXCMup0o3bAd9550mhMlF83v9eGj47ZujlQGKD-1v26XU6h502CklwIO/exec';
-
-  const API_TOKEN =
-    'BROMO-KASIR-2026-9876';
-
-
-  /********************************************************
-   * GLOBAL
-   ********************************************************/
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwUrauP1WJQmXCMup0o3bAd9550mhMlF83v9eGj47ZujlQGKD-1v26XU6h502CklwIO/exec';
+  const API_TOKEN = 'BROMO-KASIR-2026-9876';
 
   let scanner = null;
   let scannerRunning = false;
-  let currentCustomer = null;
+  let cameras = [];
+  let currentCameraId = null;
+  let scanLock = false;
+  let jsonpCounter = 0;
+  let pendingJsonp = new Map();
 
-  /*
-   * Mencegah satu QR yang sama memicu proses berkali-kali
-   * ketika kamera membaca frame berulang.
-   */
-  let qrLocked = false;
+  const $ = id => document.getElementById(id);
 
-  let apiRequestInProgress = false;
-
-
-  /********************************************************
-   * DOM
-   ********************************************************/
-
-  function el(id) {
-    return document.getElementById(id);
+  function setCameraStatus(text) {
+    $('cameraStatus').textContent = text;
   }
 
-
-  /********************************************************
-   * JSONP API
-   *
-   * Code.gs Final 2.2 mendukung ?callback=...
-   ********************************************************/
-
-  function apiRequest(
-    action,
-    customer,
-    callback
-  ) {
-
-    if (apiRequestInProgress) {
-      return;
-    }
-
-    apiRequestInProgress = true;
-
-    const callbackName =
-      'bromoCallback_' +
-      Date.now() +
-      '_' +
-      Math.floor(
-        Math.random() * 10000
-      );
-
-    let script = null;
-
-    let timeoutId = null;
-
-    window[callbackName] =
-      function(data) {
-
-        clearTimeout(timeoutId);
-
-        apiRequestInProgress = false;
-
-        try {
-          callback(
-            data || {
-              success: false,
-              code: 'EMPTY_RESPONSE',
-              message:
-                'Server mengembalikan response kosong.'
-            }
-          );
-
-        } finally {
-
-          delete window[
-            callbackName
-          ];
-
-          if (
-            script &&
-            script.parentNode
-          ) {
-            script.parentNode.removeChild(
-              script
-            );
-          }
-        }
-      };
-
-
-    script =
-      document.createElement('script');
-
-
-    let url =
-      API_URL +
-      '?action=' +
-      encodeURIComponent(action) +
-      '&customer=' +
-      encodeURIComponent(customer || '') +
-      '&token=' +
-      encodeURIComponent(API_TOKEN) +
-      '&callback=' +
-      encodeURIComponent(callbackName) +
-      '&_=' +
-      Date.now();
-
-
-    script.src = url;
-
-    script.async = true;
-
-
-    script.onerror =
-      function() {
-
-        clearTimeout(timeoutId);
-
-        apiRequestInProgress = false;
-
-        delete window[
-          callbackName
-        ];
-
-        if (
-          script &&
-          script.parentNode
-        ) {
-          script.parentNode.removeChild(
-            script
-          );
-        }
-
-        showError(
-          'Server tidak dapat dihubungi. Periksa URL Web App dan deployment Apps Script.'
-        );
-      };
-
-
-    timeoutId =
-      setTimeout(
-        function() {
-
-          if (
-            !apiRequestInProgress
-          ) {
-            return;
-          }
-
-          apiRequestInProgress = false;
-
-          delete window[
-            callbackName
-          ];
-
-          if (
-            script &&
-            script.parentNode
-          ) {
-            script.parentNode.removeChild(
-              script
-            );
-          }
-
-          showError(
-            'Server terlalu lama merespons. Coba lagi.'
-          );
-
-        },
-        15000
-      );
-
-
-    document.body.appendChild(
-      script
-    );
+  function showNotice(el, type, text) {
+    el.className = 'notice ' + type;
+    el.textContent = text;
+    el.classList.remove('hidden');
   }
 
+  function hideNotice(el) {
+    el.classList.add('hidden');
+  }
 
-  /********************************************************
-   * START CAMERA
-   ********************************************************/
+  function setDebug(text) {
+    $('debug').textContent = text || '';
+    $('debug').classList.toggle('hidden', !text);
+  }
 
-  async function startScanner() {
+  function normalizeCustomerId(value) {
+    return String(value || '')
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, '');
+  }
 
-    if (scannerRunning) {
-      return;
-    }
+  function extractCustomerId(decodedText) {
+    const raw = String(decodedText || '').trim();
 
-    if (typeof Html5Qrcode === 'undefined') {
-      showError(
-        'Library scanner QR gagal dimuat.'
-      );
-      return;
-    }
+    // BE000001
+    const direct = raw.match(/\bBE\d{4,}\b/i);
+    if (direct) return direct[0].toUpperCase();
 
-    const status =
-      el('cameraStatus');
-
-
-    status.innerHTML =
-      '⏳ Membuka kamera...';
-
-
+    // URL: ?customer=BE000001
     try {
+      const u = new URL(raw);
+      const q = u.searchParams.get('customer') || u.searchParams.get('id') || u.searchParams.get('no');
+      if (q) {
+        const found = String(q).match(/\bBE\d{4,}\b/i);
+        if (found) return found[0].toUpperCase();
+      }
+    } catch (_) {}
 
-      if (!scanner) {
-        scanner =
-          new Html5Qrcode(
-            'reader'
-          );
+    // BROMO_ESCAPES|BE000001
+    const parts = raw.split('|');
+    for (const part of parts) {
+      const found = part.match(/\bBE\d{4,}\b/i);
+      if (found) return found[0].toUpperCase();
+    }
+
+    return normalizeCustomerId(raw);
+  }
+
+  function jsonp(action, params = {}) {
+    return new Promise((resolve, reject) => {
+      const callback = '__bromo_jsonp_' + (++jsonpCounter) + '_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error('Waktu koneksi ke server habis.'));
+      }, 20000);
+
+      function cleanup() {
+        clearTimeout(timeout);
+        delete window[callback];
+        if (script.parentNode) script.parentNode.removeChild(script);
+        pendingJsonp.delete(callback);
       }
 
+      window[callback] = data => {
+        cleanup();
+        resolve(data);
+      };
 
-      qrLocked = false;
+      pendingJsonp.set(callback, true);
 
+      const query = new URLSearchParams();
+      query.set('action', action);
+      query.set('callback', callback);
+      query.set('token', API_TOKEN);
 
-      await scanner.start(
-
-        {
-          facingMode: {
-            ideal: 'environment'
-          }
-        },
-
-        {
-          fps: 10,
-
-          qrbox:
-            function(width, height) {
-
-              const size =
-                Math.floor(
-                  Math.min(
-                    width,
-                    height
-                  ) * 0.72
-                );
-
-              return {
-                width: size,
-                height: size
-              };
-            },
-
-          aspectRatio: 1.0
-        },
-
-        function(decodedText) {
-
-          onQRCode(
-            decodedText
-          );
-
-        },
-
-        function() {
-          /*
-           * QR belum terbaca.
-           * Jangan tampilkan error setiap frame.
-           */
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          query.set(key, String(value));
         }
+      });
 
-      );
+      script.src = API_URL + '?' + query.toString();
+      script.onerror = () => {
+        cleanup();
+        reject(new Error('Server Apps Script tidak dapat dihubungi.'));
+      };
 
+      document.head.appendChild(script);
+    });
+  }
 
-      scannerRunning = true;
+  async function startCamera(preferredId = null) {
+    if (scannerRunning) return;
 
-      el('startBtn')
-        .classList.add('hidden');
+    hideNotice($('cameraNotice'));
+    setDebug('');
 
-      el('stopBtn')
-        .classList.remove('hidden');
-
-      status.innerHTML =
-        '🟢 <b>Kamera aktif</b><br>' +
-        'Arahkan kamera ke QR pelanggan.';
-
+    if (!window.isSecureContext) {
+      showNotice($('cameraNotice'), 'error',
+        '🔒 Kamera membutuhkan HTTPS. Buka scanner melalui alamat https://....github.io/....');
+      setCameraStatus('Halaman tidak menggunakan HTTPS.');
+      return;
     }
 
-    catch(error) {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showNotice($('cameraNotice'), 'error',
+        '📵 Browser ini tidak mendukung akses kamera. Gunakan Chrome/Safari versi terbaru.');
+      setCameraStatus('Akses kamera tidak tersedia.');
+      return;
+    }
 
-      console.error(error);
+    $('startCameraBtn').disabled = true;
+    setCameraStatus('Meminta izin kamera...');
 
+    try {
+      // Important: explicitly request permission first.
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false
+      });
+
+      stream.getTracks().forEach(track => track.stop());
+
+      setCameraStatus('Mencari kamera yang tersedia...');
+      cameras = await Html5Qrcode.getCameras();
+
+      if (!cameras || cameras.length === 0) {
+        throw new Error('Kamera tidak ditemukan setelah izin diberikan.');
+      }
+
+      populateCameraList(cameras);
+
+      let selectedId = preferredId || chooseBestCamera(cameras);
+
+      await startScannerWithCamera(selectedId);
+
+    } catch (err) {
+      $('startCameraBtn').disabled = false;
       scannerRunning = false;
 
-      el('startBtn')
-        .classList.remove('hidden');
-
-      el('stopBtn')
-        .classList.add('hidden');
-
-      status.innerHTML =
-        '🔴 <b>Kamera gagal dibuka.</b><br>' +
-        '<small>' +
-        'Pastikan GitHub Pages menggunakan HTTPS dan izin kamera diberikan.' +
-        '</small>';
+      const message = cameraErrorMessage(err);
+      setCameraStatus(message.short);
+      showNotice($('cameraNotice'), 'error', message.long);
+      setDebug('Detail browser: ' + (err && err.name ? err.name + ' — ' : '') + (err && err.message ? err.message : String(err)));
     }
   }
 
+  function chooseBestCamera(list) {
+    const backKeywords = ['back', 'rear', 'environment', 'belakang', 'world'];
+    const found = list.find(cam => {
+      const label = String(cam.label || '').toLowerCase();
+      return backKeywords.some(k => label.includes(k));
+    });
+    return found ? found.id : list[0].id;
+  }
 
-  /********************************************************
-   * STOP CAMERA
-   ********************************************************/
+  function populateCameraList(list) {
+    const box = $('cameraSelectBox');
+    const select = $('cameraSelect');
+    select.innerHTML = '';
 
-  async function stopScanner() {
+    if (list.length <= 1) {
+      box.style.display = 'none';
+      return;
+    }
 
-    if (
-      scanner &&
-      scannerRunning
-    ) {
+    list.forEach((cam, index) => {
+      const option = document.createElement('option');
+      option.value = cam.id;
+      option.textContent = cam.label || ('Kamera ' + (index + 1));
+      select.appendChild(option);
+    });
 
-      try {
+    select.value = currentCameraId || chooseBestCamera(list);
+    box.style.display = 'block';
+
+    select.onchange = async () => {
+      const id = select.value;
+      await stopCamera(false);
+      await startCamera(id);
+    };
+  }
+
+  async function startScannerWithCamera(cameraId) {
+    if (scannerRunning) await stopCamera(false);
+
+    $('cameraBox').classList.remove('hidden');
+    $('stopCameraBtn').classList.remove('hidden');
+    $('startCameraBtn').classList.add('hidden');
+
+    if (!scanner) scanner = new Html5Qrcode('reader');
+
+    currentCameraId = cameraId;
+    setCameraStatus('Kamera aktif. Arahkan QR pelanggan ke kotak scanner...');
+
+    await scanner.start(
+      { deviceId: { exact: cameraId } },
+      {
+        fps: 10,
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+          const size = Math.floor(Math.min(viewfinderWidth, viewfinderHeight) * 0.72);
+          return { width: size, height: size };
+        },
+        aspectRatio: 1.0
+      },
+      onQrSuccess,
+      () => {}
+    );
+
+    scannerRunning = true;
+  }
+
+  async function stopCamera(showStatus = true) {
+    try {
+      if (scanner && scannerRunning) {
         await scanner.stop();
       }
-      catch(e) {
-        console.warn(e);
-      }
-    }
+    } catch (_) {}
 
     scannerRunning = false;
+    scanLock = false;
 
-    el('startBtn')
-      .classList.remove('hidden');
+    $('cameraBox').classList.add('hidden');
+    $('stopCameraBtn').classList.add('hidden');
+    $('startCameraBtn').classList.remove('hidden');
+    $('startCameraBtn').disabled = false;
 
-    el('stopBtn')
-      .classList.add('hidden');
-
-    el('cameraStatus')
-      .innerText =
-      'Kamera dimatikan.';
+    if (showStatus) setCameraStatus('Kamera dimatikan.');
   }
 
+  async function onQrSuccess(decodedText) {
+    if (scanLock) return;
+    scanLock = true;
 
-  /********************************************************
-   * QR DETECTED
-   ********************************************************/
+    const customerId = extractCustomerId(decodedText);
 
-  function onQRCode(text) {
-
-    if (qrLocked) {
+    if (!/^BE\d{4,}$/i.test(customerId)) {
+      scanLock = false;
+      showNotice($('cameraNotice'), 'warn',
+        'QR terbaca, tetapi No Pelanggan tidak ditemukan. Pastikan QR berasal dari Bromo Escapes.');
       return;
     }
 
-    const customerId =
-      extractCustomerId(text);
+    $('customerInput').value = customerId;
+    showNotice($('cameraNotice'), 'success', 'QR terbaca: ' + customerId);
 
+    // Stop camera before server call to prevent repeated scans.
+    await stopCamera(false);
+    await searchCustomer(customerId);
+  }
 
-    if (!customerId) {
+  function cameraErrorMessage(err) {
+    const name = err && err.name ? err.name : '';
+    const msg = err && err.message ? err.message : '';
 
-      showError(
-        'QR pelanggan tidak valid. QR harus mengandung No Pelanggan seperti BE000001.'
-      );
+    if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+      return {
+        short: 'Izin kamera ditolak.',
+        long: '🚫 Izin kamera ditolak. Buka pengaturan situs/browser lalu izinkan Camera untuk halaman GitHub ini, kemudian reload halaman.'
+      };
+    }
+    if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+      return {
+        short: 'Kamera tidak ditemukan.',
+        long: '📷 Kamera tidak ditemukan. Pastikan perangkat memiliki kamera dan browser mendapat izin kamera.'
+      };
+    }
+    if (name === 'NotReadableError' || name === 'TrackStartError') {
+      return {
+        short: 'Kamera sedang digunakan.',
+        long: '⚠️ Kamera tidak dapat dibaca. Tutup aplikasi/browser lain yang sedang memakai kamera, lalu coba lagi.'
+      };
+    }
+    if (name === 'SecurityError') {
+      return {
+        short: 'Akses kamera diblokir browser.',
+        long: '🔒 Browser memblokir akses kamera. Pastikan halaman dibuka melalui HTTPS dan izin Camera untuk situs ini adalah Allow.'
+      };
+    }
+    if (name === 'OverconstrainedError') {
+      return {
+        short: 'Konfigurasi kamera tidak cocok.',
+        long: '⚙️ Kamera belakang tidak cocok dengan konfigurasi awal. Coba aktifkan kembali kamera; versi ini akan mencoba kamera lain secara otomatis.'
+      };
+    }
 
+    return {
+      short: 'Kamera gagal dibuka.',
+      long: '❌ Kamera gagal dibuka. Pastikan HTTPS aktif, izin kamera diberikan, dan tidak ada aplikasi lain yang sedang memakai kamera.'
+    };
+  }
+
+  async function searchCustomer(forcedId = null) {
+    const id = normalizeCustomerId(forcedId || $('customerInput').value);
+
+    if (!/^BE\d{4,}$/.test(id)) {
+      showNotice($('resultNotice'), 'error', 'Masukkan No Pelanggan yang valid, contoh BE000001.');
+      $('customerCard').classList.add('hidden');
       return;
     }
 
+    $('searchBtn').disabled = true;
+    showNotice($('resultNotice'), 'info', '🔎 Mencari pelanggan ' + id + '...');
 
-    qrLocked = true;
-
-
-    /*
-     * Matikan kamera sebelum request API.
-     * Ini mencegah QR diproses berkali-kali.
-     */
-    stopScanner();
-
-
-    el('customerInput')
-      .value =
-      customerId;
-
-
-    searchCustomer(
-      customerId
-    );
-  }
-
-
-  /********************************************************
-   * EXTRACT CUSTOMER ID
-   ********************************************************/
-
-  function extractCustomerId(text) {
-
-    text =
-      String(
-        text || ''
-      ).trim();
-
-
-    /*
-     * Direct:
-     * BE000001
-     */
-    let match =
-      text.match(
-        /BE\d{1,}/i
-      );
-
-    if (match) {
-      return match[0]
-        .toUpperCase();
-    }
-
-
-    /*
-     * URL:
-     * ...customer=BE000001
-     */
     try {
+      const response = await jsonp('search', { customerId: id });
 
-      const url =
-        new URL(text);
-
-      const customer =
-        url.searchParams.get(
-          'customer'
-        );
-
-      if (customer) {
-
-        match =
-          customer.match(
-            /BE\d{1,}/i
-          );
-
-        if (match) {
-          return match[0]
-            .toUpperCase();
-        }
+      if (!response || response.success === false) {
+        throw new Error(response && response.message ? response.message : 'Pelanggan tidak ditemukan.');
       }
 
-    }
-    catch(e) {
-      /*
-       * Bukan URL.
-       */
-    }
+      const data = response.data || response.customer || response;
 
+      const customerId = data.noPelanggan || data.customerId || data.id || id;
+      const name = data.nama || data.name || '-';
+      const visits = Number(data.jumlahKunjungan ?? data.visits ?? data.visitCount ?? 0);
 
-    /*
-     * BROMO_ESCAPES|BE000001
-     */
-    if (
-      text.includes('|')
-    ) {
+      $('customerId').textContent = customerId;
+      $('customerName').textContent = name;
+      $('visitValue').textContent = Math.max(0, visits) + ' / 10';
 
-      const parts =
-        text.split('|');
+      const cycle = data.siklusBerakhir || data.cycleEnd || data.voucherExpired || '';
+      $('cycleText').textContent = cycle ? 'Siklus loyalty: ' + cycle : '';
 
-      for (
-        let i = 0;
-        i < parts.length;
-        i++
-      ) {
+      $('customerCard').classList.remove('hidden');
+      showNotice($('resultNotice'), 'success', '✅ Pelanggan ditemukan.');
 
-        match =
-          parts[i].match(
-            /BE\d{1,}/i
-          );
+      const canCheckin = data.canCheckin !== false && data.bolehCheckin !== false;
+      $('checkinBtn').disabled = !canCheckin;
 
-        if (match) {
-          return match[0]
-            .toUpperCase();
-        }
+      if (!canCheckin && (data.message || data.reason)) {
+        showNotice($('resultNotice'), 'error', '❌ ' + (data.message || data.reason));
       }
+    } catch (err) {
+      $('customerCard').classList.add('hidden');
+      showNotice($('resultNotice'), 'error', '❌ ' + (err.message || 'Gagal mencari pelanggan.'));
+      setDebug('Search error: ' + (err && err.stack ? err.stack : String(err)));
+    } finally {
+      $('searchBtn').disabled = false;
+      scanLock = false;
     }
-
-
-    return null;
   }
 
+  async function doCheckin() {
+    const customerId = normalizeCustomerId($('customerId').textContent);
+    if (!/^BE\d{4,}$/.test(customerId)) return;
 
-  /********************************************************
-   * SEARCH CUSTOMER
-   ********************************************************/
+    const btn = $('checkinBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ MEMPROSES CHECK-IN...';
 
-  function searchCustomer(
-    customerIdFromScanner
-  ) {
+    try {
+      const response = await jsonp('checkin', { customerId });
 
-    if (apiRequestInProgress) {
-      return;
-    }
-
-    const id =
-      (
-        customerIdFromScanner ||
-        el('customerInput').value
-      )
-      .trim()
-      .toUpperCase();
-
-
-    if (!id) {
-
-      showError(
-        'Masukkan No Pelanggan.'
-      );
-
-      qrLocked = false;
-
-      return;
-    }
-
-
-    if (
-      !/^BE\d+$/.test(id)
-    ) {
-
-      showError(
-        'Format No Pelanggan tidak valid.'
-      );
-
-      qrLocked = false;
-
-      return;
-    }
-
-
-    currentCustomer = null;
-
-    el('customerCard')
-      .style.display =
-      'none';
-
-    setLoading(
-      '🔍 Mencari pelanggan...'
-    );
-
-
-    el('searchBtn')
-      .disabled = true;
-
-
-    apiRequest(
-
-      'search',
-
-      id,
-
-      function(data) {
-
-        el('searchBtn')
-          .disabled = false;
-
-
-        if (
-          !data ||
-          !data.success ||
-          !data.customer
-        ) {
-
-          showError(
-            data &&
-            data.message
-              ? data.message
-              : 'Pelanggan tidak ditemukan.'
-          );
-
-          qrLocked = false;
-
-          return;
-        }
-
-
-        currentCustomer =
-          data.customer;
-
-
-        el('customerId')
-          .innerText =
-          data.customer.customerId;
-
-
-        el('customerName')
-          .innerText =
-          data.customer.nama ||
-          '-';
-
-
-        el('customerMeta')
-          .innerText =
-          (
-            data.customer.namaTravel
-              ? data.customer.namaTravel
-              : 'Customer Loyalty'
-          );
-
-
-        const visits =
-          Number(
-            data.customer.jumlahKunjungan || 0
-          );
-
-
-        el('visits')
-          .innerText =
-          visits +
-          ' / 10';
-
-
-        el('customerCard')
-          .style.display =
-          'block';
-
-
-        hideResult();
-
-
-        /*
-         * Setelah search berhasil, QR lock dilepas.
-         * Kamera tetap mati sampai operator menekan
-         * "Scan Customer Lain".
-         */
-        qrLocked = false;
-
+      if (!response || response.success === false) {
+        throw new Error(response && response.message ? response.message : 'Check-in ditolak.');
       }
 
-    );
-  }
+      const data = response.data || response;
+      const visits = Number(data.jumlahKunjungan ?? data.visits ?? data.visitCount ?? 0);
+      const checkinNumber = data.checkinKe || data.visitNumber || visits;
+      const reward = data.reward || data.rewardAmount || '';
 
-
-  /********************************************************
-   * CHECK IN
-   ********************************************************/
-
-  function checkIn() {
-
-    if (!currentCustomer) {
-
-      showError(
-        'Pelanggan belum dipilih.'
-      );
-
-      return;
-    }
-
-
-    if (apiRequestInProgress) {
-      return;
-    }
-
-
-    const id =
-      currentCustomer.customerId;
-
-
-    const button =
-      el('checkinBtn');
-
-
-    button.disabled = true;
-
-
-    setLoading(
-      '⏳ Memproses check-in...'
-    );
-
-
-    apiRequest(
-
-      'checkin',
-
-      id,
-
-      function(data) {
-
-        button.disabled = false;
-
-
-        if (
-          !data ||
-          !data.success
-        ) {
-
-          showError(
-            data &&
-            data.message
-              ? data.message
-              : 'Check-in gagal.'
-          );
-
-          return;
-        }
-
-
-        if (
-          data.code ===
-          'REWARD_EARNED' ||
-          data.reward
-        ) {
-
-          showSuccess(
-
-            '🎉 CHECK-IN KE-10 BERHASIL!' +
-
-            '<div class="reward">' +
-            'Rp300.000' +
-            '</div>' +
-
-            '<div>' +
-            'Reward berhasil diperoleh.<br>' +
-            'Progress berikutnya kembali ke 0.' +
-            '</div>' +
-
-            '<div class="small">' +
-            'Email: ' +
-            escapeHtml(
-              data.emailStatus ||
-              'diproses'
-            ) +
-            '</div>'
-          );
-
-        }
-        else {
-
-          showSuccess(
-
-            '✅ CHECK-IN BERHASIL' +
-
-            '<br><br>' +
-
-            'Check-in ke-' +
-            escapeHtml(
-              String(
-                data.checkinKe || ''
-              )
-            ) +
-
-            '<br>' +
-
-            'Progress: ' +
-            escapeHtml(
-              String(
-                data.jumlahKunjungan ??
-                data.visits ??
-                0
-              )
-            ) +
-            ' / 10' +
-
-            '<br><br>' +
-
-            '<span class="small">' +
-            'Email: ' +
-            escapeHtml(
-              data.emailStatus ||
-              'diproses'
-            ) +
-            '</span>'
-          );
-        }
-
-
-        /*
-         * Customer selesai diproses.
-         */
-        el('customerCard')
-          .style.display =
-          'none';
-
-
-        currentCustomer =
-          null;
-
-
-        el('customerInput')
-          .value = '';
-
-
-        /*
-         * Setelah sukses, operator bisa langsung
-         * scan customer berikutnya.
-         */
-        qrLocked = false;
-
+      let message = 'CHECK-IN BERHASIL — Check-in ke-' + checkinNumber + '. Progress: ' + visits + ' / 10.';
+      if (reward) {
+        message += ' 🎁 Reward ' + formatRupiah(reward) + ' telah dibuat.';
       }
 
-    );
-  }
+      showNotice($('resultNotice'), 'success', '✅ ' + message);
+      $('visitValue').textContent = Math.max(0, visits) + ' / 10';
 
-
-  /********************************************************
-   * RESET CUSTOMER
-   ********************************************************/
-
-  function resetCustomer() {
-
-    currentCustomer =
-      null;
-
-    qrLocked = false;
-
-    el('customerCard')
-      .style.display =
-      'none';
-
-    el('customerInput')
-      .value = '';
-
-    hideResult();
-
-    /*
-     * Tidak otomatis membuka kamera.
-     * Operator menekan tombol kamera.
-     */
-  }
-
-
-  /********************************************************
-   * LOADING / RESULT
-   ********************************************************/
-
-  function setLoading(
-    text
-  ) {
-
-    const result =
-      el('result');
-
-    result.className =
-      'result info';
-
-    result.innerHTML =
-      escapeHtml(
-        text
-      );
-
-    result.style.display =
-      'block';
-  }
-
-
-  function showSuccess(
-    text
-  ) {
-
-    const result =
-      el('result');
-
-    result.className =
-      'result success';
-
-    result.innerHTML =
-      text;
-
-    result.style.display =
-      'block';
-  }
-
-
-  function showError(
-    text
-  ) {
-
-    const result =
-      el('result');
-
-    result.className =
-      'result error';
-
-    result.innerHTML =
-      '❌ ' +
-      escapeHtml(
-        String(text || 'Terjadi kesalahan.')
-      );
-
-    result.style.display =
-      'block';
-  }
-
-
-  function hideResult() {
-
-    const result =
-      el('result');
-
-    result.className =
-      'result';
-
-    result.innerHTML =
-      '';
-
-    result.style.display =
-      'none';
-  }
-
-
-  /********************************************************
-   * HTML ESCAPE
-   ********************************************************/
-
-  function escapeHtml(
-    value
-  ) {
-
-    return String(
-      value == null
-        ? ''
-        : value
-    )
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-    .replace(
-      /</g,
-      '&lt;'
-    )
-    .replace(
-      />/g,
-      '&gt;'
-    )
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-    .replace(
-      /'/g,
-      '&#039;'
-    );
-  }
-
-
-  /********************************************************
-   * ENTER KEY
-   ********************************************************/
-
-  el('customerInput')
-    .addEventListener(
-      'keydown',
-      function(event) {
-
-        if (
-          event.key ===
-          'Enter'
-        ) {
-          searchCustomer();
-        }
-
+      if (data.siklusBerakhir || data.cycleEnd) {
+        $('cycleText').textContent = 'Siklus loyalty: ' + (data.siklusBerakhir || data.cycleEnd);
       }
-    );
+
+      btn.textContent = '☑ CHECK-IN BERHASIL';
+
+      // Keep customer card visible so cashier can see the result.
+      // Camera can be activated again for the next customer.
+      setTimeout(() => {
+        btn.textContent = '☑ CHECK-IN SEKARANG';
+        btn.disabled = false;
+      }, 2500);
+
+    } catch (err) {
+      showNotice($('resultNotice'), 'error', '❌ ' + (err.message || 'Check-in gagal.'));
+      btn.disabled = false;
+      btn.textContent = '☑ CHECK-IN SEKARANG';
+      setDebug('Check-in error: ' + (err && err.stack ? err.stack : String(err)));
+    }
+  }
+
+  function formatRupiah(value) {
+    const n = Number(String(value).replace(/[^\d.-]/g, ''));
+    if (!Number.isFinite(n)) return String(value);
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      maximumFractionDigits: 0
+    }).format(n);
+  }
+
+  // Improve iOS/Android camera compatibility:
+  // after permission is granted, enumerateDevices is allowed to reveal labels.
+  async function warmupCameraPermission() {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      stream.getTracks().forEach(t => t.stop());
+    } catch (_) {}
+  }
+
+  // Enter key in manual customer field.
+  $('customerInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') searchCustomer();
+  });
+
+  // Release camera if browser navigates away.
+  window.addEventListener('pagehide', () => {
+    try {
+      if (scanner && scannerRunning) scanner.stop();
+    } catch (_) {}
+  });
+})();
 </script>
-
 </body>
 </html>
